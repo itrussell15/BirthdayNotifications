@@ -146,7 +146,6 @@ if __name__ == "__main__":
     db = BirthdayDB("/home/schmuck/Info.db")
     for i in [0, 7, 30]:
         date = datetime.date.today()
-        date = datetime.date(1999, 12, 31)
         out = db.Query(i, date = date)
         if len(out) >= 1:
             # Send notification to phone about birthday upcoming
