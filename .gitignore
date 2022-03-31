@@ -1,4 +1,5 @@
-*.txt
+Secret.txt
 *.swp
 *.db
 *.csv
+*.log

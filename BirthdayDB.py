@@ -132,8 +132,6 @@ class Notifications:
         self.sendNotification(title, body)
 
     def sendNotification(self, title, message):
-        print(message)
-        print(title)
         r = requests.post('https://api.pushover.net/1/messages.json', {
               "token": self._apiKey,
               "user": self._userKey,
