@@ -9,12 +9,12 @@ import sqlite3, requests
 import os
 import datetime
 import time
+import urllib.parse
 
 class DBManage:
 
     def __init__(self, location):
         self._isEmpty = self._checkExistence(location)
-        # if not self._isEmpty:
         self._con = sqlite3.connect(location)
         self._cur = self._con.cursor()
 
@@ -47,7 +47,6 @@ class DBManage:
             command += '''"{}"'''.format(v[0])
             command += " "
             command += v[1]
-            # if n != len(v):
             command += ",\n"
         if primaryKey:
             command += "PRIMARY KEY "
@@ -56,7 +55,6 @@ class DBManage:
             except:
                 print('Invalid Primary Key Type')
         command += ")"
-        # print(command)
         self._cur.execute(command)
 
     def _checkExistence(self, path):
@@ -119,7 +117,7 @@ class Notifications:
         self.sent_messages = 0
 
     def _loadKey(self):
-        with open("/home/schmuck/Secret.txt", 'r') as f:
+        with open("Secret.txt", 'r') as f:
             out = f.readlines()
         return out[0].strip(), out[1].strip()
 
@@ -128,11 +126,14 @@ class Notifications:
         body = "Your {} {} {} has a birthday ".format(out.relationship, out.fname, out.lname)
         if time == 0:
             body += "today!"
+            if out.customMessage:
+                self.sendNotificationWithText(title, body, out.customMessage)
+            else:
+                self.sendNotification(title, body)
         else:
             body += "{} days from now!".format(time)
+            self.sendNotification(title, body)
         self.sent_messages +=1
-        
-        self.sendNotification(title, body)
 
     def sendNotification(self, title, message):
         r = requests.post('https://api.pushover.net/1/messages.json', {
@@ -141,16 +142,25 @@ class Notifications:
               "title": title,
               "message": message,
               })
-    
+        
+    def sendNotificationWithText(self, title, message, textMessage):
+        r = requests.post('https://api.pushover.net/1/messages.json', {
+              "token": self._apiKey,
+              "user": self._userKey,
+              "title": title,
+              "message": message,
+              "url": "shortcuts://run-shortcut?name=BirthdayText&input={}".format(urllib.parse.quote(textMessage)),
+              "url_title": "Send them a text!"
+              })        
 
-# if __name__ == "__main__":
-#     notify = Notifications()
-#     db = BirthdayDB("/home/schmuck/Info.db")
-#     for i in [0, 7, 30]:
-#         date = datetime.date.today()
-#         out = db.Query(i, date = date)
-#         if len(out) >= 1:
-#             # Send notification to phone about birthday upcoming
-#             [notify.GenerateMessage(j, i) for j in out]
-#     db.end()
-#     print("Script Complete @ {}, {} messages sent".format(datetime.datetime.today(), notify.sent_messages))
+if __name__ == "__main__":
+    notify = Notifications()
+    db = BirthdayDB("A:\\appsuser\\db\\Test.db")
+    for i in [0, 7, 30]:
+        date = datetime.date.today()
+        out = db.Query(i, date = date)
+        if len(out) >= 1:
+            # Send notification to phone about birthday upcoming
+            [notify.GenerateMessage(j, i) for j in out]
+    db.end()
+    print("Script Complete @ {}, {} messages sent".format(datetime.datetime.today(), notify.sent_messages))
