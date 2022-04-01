@@ -73,11 +73,11 @@ class BirthdayDB(DBManage):
         self._tableName = "Birthdays"
         self._CreateTable()
 
-    def AddPerson(self, fname, lname, birthday, birthLocation = None, relationship= None):
+    def AddPerson(self, fname, lname, birthday, birthLocation = None, relationship= None, customMessage = None):
         command = '''
-            INSERT INTO {}(FirstName, LastName, Birthday, BirthLocation, Relationship) \
-                VALUES (?, ?, ?, ?, ?)'''.format(self._tableName)
-        self._cur.execute(command, (fname, lname, birthday, birthLocation, relationship, ))
+            INSERT INTO {}(FirstName, LastName, Birthday, BirthLocation, Relationship, customMessage) \
+                VALUES (?, ?, ?, ?, ?, ?)'''.format(self._tableName)
+        self._cur.execute(command, (fname, lname, birthday, birthLocation, relationship, customMessage,))
 
     def _CreateTable(self):
         self.create(self._tableName,
@@ -85,7 +85,8 @@ class BirthdayDB(DBManage):
                     "LastName": "TEXT NOT NULL",
                     "Birthday": "TEXT NOT NULL",
                     "BirthLocation": "TEXT",
-                    "Relationship": "TEXT"},
+                    "Relationship": "TEXT",
+                    "customMessage": "TEXT"},
                     primaryKey = ["FirstName", "LastName"]
                     )
 
@@ -109,6 +110,7 @@ class BirthdayDB(DBManage):
             self.birthday = row[2]
             self.birthplace = row[3]
             self.relationship = row[4]
+            self.customMessage = row[5]
 
 class Notifications:
 
@@ -129,26 +131,26 @@ class Notifications:
         else:
             body += "{} days from now!".format(time)
         self.sent_messages +=1
+        
         self.sendNotification(title, body)
 
     def sendNotification(self, title, message):
-        print(message)
-        print(title)
         r = requests.post('https://api.pushover.net/1/messages.json', {
               "token": self._apiKey,
               "user": self._userKey,
               "title": title,
               "message": message,
               })
+    
 
-if __name__ == "__main__":
-    notify = Notifications()
-    db = BirthdayDB("/home/schmuck/Info.db")
-    for i in [0, 7, 30]:
-        date = datetime.date.today()
-        out = db.Query(i, date = date)
-        if len(out) >= 1:
-            # Send notification to phone about birthday upcoming
-            [notify.GenerateMessage(j, i) for j in out]
-    db.end()
-    print("Script Complete @ {}, {} messages sent".format(datetime.datetime.today(), notify.sent_messages))
+# if __name__ == "__main__":
+#     notify = Notifications()
+#     db = BirthdayDB("/home/schmuck/Info.db")
+#     for i in [0, 7, 30]:
+#         date = datetime.date.today()
+#         out = db.Query(i, date = date)
+#         if len(out) >= 1:
+#             # Send notification to phone about birthday upcoming
+#             [notify.GenerateMessage(j, i) for j in out]
+#     db.end()
+#     print("Script Complete @ {}, {} messages sent".format(datetime.datetime.today(), notify.sent_messages))
