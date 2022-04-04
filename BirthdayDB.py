@@ -9,6 +9,7 @@ import sqlite3, requests
 import os
 import datetime
 import time
+import logging
 
 class DBManage:
 
@@ -73,11 +74,11 @@ class BirthdayDB(DBManage):
         self._tableName = "Birthdays"
         self._CreateTable()
 
-    def AddPerson(self, fname, lname, birthday, birthLocation = None, relationship= None):
+    def AddPerson(self, fname, lname, birthday, birthLocation = None, relationship= None, sendMessage = None, customMessage = None, phoneNumber = None):
         command = '''
             INSERT INTO {}(FirstName, LastName, Birthday, BirthLocation, Relationship) \
-                VALUES (?, ?, ?, ?, ?)'''.format(self._tableName)
-        self._cur.execute(command, (fname, lname, birthday, birthLocation, relationship, ))
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, )'''.format(self._tableName)
+        self._cur.execute(command, (fname, lname, birthday, birthLocation, relationship, sendMessage, customMessage, phoneNumber))
 
     def _CreateTable(self):
         self.create(self._tableName,
@@ -85,7 +86,10 @@ class BirthdayDB(DBManage):
                     "LastName": "TEXT NOT NULL",
                     "Birthday": "TEXT NOT NULL",
                     "BirthLocation": "TEXT",
-                    "Relationship": "TEXT"},
+                    "Relationship": "TEXT",
+                    "sendMessage": "TEXT DEFAULT 0",
+                    "customMessage": "TEXT",
+                    "phoneNumber": "TEXT"},
                     primaryKey = ["FirstName", "LastName"]
                     )
 
@@ -140,7 +144,15 @@ class Notifications:
               "title": title,
               "message": message,
               })
-
+        
+def setupLogging():
+    log_format = '%(asctime)s %(message)s'
+    logging.basicConfig(filename='birthdays.log',
+                        format = log_format,
+                        filemode = "a",
+                        level = logging.INFO)    
+    return logging.getLogger("DiscordBotLogger")
+    
 if __name__ == "__main__":
     notify = Notifications()
     db = BirthdayDB("/home/schmuck/Info.db")
@@ -151,4 +163,7 @@ if __name__ == "__main__":
             # Send notification to phone about birthday upcoming
             [notify.GenerateMessage(j, i) for j in out]
     db.end()
-    print("Script Complete @ {}, {} messages sent".format(datetime.datetime.today(), notify.sent_messages))
+    
+    log = setupLogging()
+    log.info("{} messages sent".format(notify.sent_messages))
+    # print("Script Complete @ {}, {} messages sent".format(datetime.datetime.today(), notify.sent_messages))

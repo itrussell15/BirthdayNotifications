@@ -2,3 +2,5 @@
 *.swp
 *.db
 *.csv
+*.log
+__pycache__
