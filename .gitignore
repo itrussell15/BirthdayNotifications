@@ -3,4 +3,9 @@
 *.db
 *.csv
 *.log
+<<<<<<< HEAD
 __pycache__
+=======
+__pycache__
+>>>>>>> 4fb3c8f1c38f498eeb9563503730bfd4e2cb4488
+_BACKUP_1440.gitignore

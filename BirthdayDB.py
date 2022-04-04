@@ -10,12 +10,12 @@ import os
 import datetime
 import time
 import logging
+import urllib.parse
 
 class DBManage:
 
     def __init__(self, location):
         self._isEmpty = self._checkExistence(location)
-        # if not self._isEmpty:
         self._con = sqlite3.connect(location)
         self._cur = self._con.cursor()
 
@@ -48,7 +48,6 @@ class DBManage:
             command += '''"{}"'''.format(v[0])
             command += " "
             command += v[1]
-            # if n != len(v):
             command += ",\n"
         if primaryKey:
             command += "PRIMARY KEY "
@@ -57,7 +56,6 @@ class DBManage:
             except:
                 print('Invalid Primary Key Type')
         command += ")"
-        # print(command)
         self._cur.execute(command)
 
     def _checkExistence(self, path):
@@ -73,12 +71,11 @@ class BirthdayDB(DBManage):
         super().__init__(location)
         self._tableName = "Birthdays"
         self._CreateTable()
-
-    def AddPerson(self, fname, lname, birthday, birthLocation = None, relationship= None, sendMessage = None, customMessage = None, phoneNumber = None):
+    def AddPerson(self, fname, lname, birthday, birthLocation = None, relationship= None, customMessage = None):
         command = '''
-            INSERT INTO {}(FirstName, LastName, Birthday, BirthLocation, Relationship) \
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, )'''.format(self._tableName)
-        self._cur.execute(command, (fname, lname, birthday, birthLocation, relationship, sendMessage, customMessage, phoneNumber))
+            INSERT INTO {}(FirstName, LastName, Birthday, BirthLocation, Relationship, customMessage) \
+                VALUES (?, ?, ?, ?, ?, ?)'''.format(self._tableName)
+        self._cur.execute(command, (fname, lname, birthday, birthLocation, relationship, customMessage,))
 
     def _CreateTable(self):
         self.create(self._tableName,
@@ -87,9 +84,7 @@ class BirthdayDB(DBManage):
                     "Birthday": "TEXT NOT NULL",
                     "BirthLocation": "TEXT",
                     "Relationship": "TEXT",
-                    "sendMessage": "TEXT DEFAULT 0",
-                    "customMessage": "TEXT",
-                    "phoneNumber": "TEXT"},
+                    "customMessage": "TEXT"},
                     primaryKey = ["FirstName", "LastName"]
                     )
 
@@ -113,6 +108,7 @@ class BirthdayDB(DBManage):
             self.birthday = row[2]
             self.birthplace = row[3]
             self.relationship = row[4]
+            self.customMessage = row[5]
 
 class Notifications:
 
@@ -121,7 +117,7 @@ class Notifications:
         self.sent_messages = 0
 
     def _loadKey(self):
-        with open("/home/schmuck/Secret.txt", 'r') as f:
+        with open("Secret.txt", 'r') as f:
             out = f.readlines()
         return out[0].strip(), out[1].strip()
 
@@ -130,32 +126,44 @@ class Notifications:
         body = "Your {} {} {} has a birthday ".format(out.relationship, out.fname, out.lname)
         if time == 0:
             body += "today!"
+            if out.customMessage:
+                self.sendNotificationWithText(title, body, out.customMessage)
+            else:
+                self.sendNotification(title, body)
         else:
             body += "{} days from now!".format(time)
+            self.sendNotification(title, body)
         self.sent_messages +=1
-        self.sendNotification(title, body)
 
     def sendNotification(self, title, message):
-        print(message)
-        print(title)
         r = requests.post('https://api.pushover.net/1/messages.json', {
               "token": self._apiKey,
               "user": self._userKey,
               "title": title,
               "message": message,
               })
-        
+
 def setupLogging():
     log_format = '%(asctime)s %(message)s'
     logging.basicConfig(filename='birthdays.log',
                         format = log_format,
                         filemode = "a",
-                        level = logging.INFO)    
+                        level = logging.INFO)
     return logging.getLogger("DiscordBotLogger")
-    
+
+    def sendNotificationWithText(self, title, message, textMessage):
+        r = requests.post('https://api.pushover.net/1/messages.json', {
+              "token": self._apiKey,
+              "user": self._userKey,
+              "title": title,
+              "message": message,
+              "url": "shortcuts://run-shortcut?name=BirthdayText&input={}".format(urllib.parse.quote(textMessage)),
+              "url_title": "Send them a text!"
+              })
+
 if __name__ == "__main__":
     notify = Notifications()
-    db = BirthdayDB("/home/schmuck/Info.db")
+    db = BirthdayDB("A:\\appsuser\\db\\Test.db")
     for i in [0, 7, 30]:
         date = datetime.date.today()
         out = db.Query(i, date = date)
@@ -163,7 +171,6 @@ if __name__ == "__main__":
             # Send notification to phone about birthday upcoming
             [notify.GenerateMessage(j, i) for j in out]
     db.end()
-    
+
     log = setupLogging()
     log.info("{} messages sent".format(notify.sent_messages))
-    # print("Script Complete @ {}, {} messages sent".format(datetime.datetime.today(), notify.sent_messages))
