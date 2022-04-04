@@ -9,6 +9,7 @@ import sqlite3, requests
 import os
 import datetime
 import time
+import logging
 
 class DBManage:
 
@@ -56,7 +57,6 @@ class DBManage:
             except:
                 print('Invalid Primary Key Type')
         command += ")"
-        # print(command)
         self._cur.execute(command)
 
     def _checkExistence(self, path):
@@ -86,8 +86,7 @@ class BirthdayDB(DBManage):
                     "Birthday": "TEXT NOT NULL",
                     "BirthLocation": "TEXT",
                     "Relationship": "TEXT"},
-                    primaryKey = ["FirstName", "LastName"]
-                    )
+                    primaryKey = ["FirstName", "LastName"])
 
     def Query(self, length, date = datetime.date.today(), **kwargs):
         future = date + datetime.timedelta(days = length)
@@ -138,6 +137,14 @@ class Notifications:
               "title": title,
               "message": message,
               })
+        
+def loggingSetup():
+    log_format = '%(asctime)s %(message)s'
+    logging.basicConfig(filename='birthday.log',
+                        format = log_format,
+                        filemode = "a",
+                        level = logging.INFO)    
+    return logging.getLogger("BirthdayLogger")
 
 if __name__ == "__main__":
     notify = Notifications()
@@ -149,4 +156,6 @@ if __name__ == "__main__":
             # Send notification to phone about birthday upcoming
             [notify.GenerateMessage(j, i) for j in out]
     db.end()
-    print("Script Complete @ {}, {} messages sent".format(datetime.datetime.today(), notify.sent_messages))
+
+    log = loggingSetup()
+    log.info("Script Complete {} messages sent".format(notify.sent_messages))
