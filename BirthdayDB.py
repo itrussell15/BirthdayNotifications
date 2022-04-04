@@ -149,7 +149,7 @@ def setupLogging():
                         format = log_format,
                         filemode = "a",
                         level = logging.INFO)
-    return logging.getLogger("DiscordBotLogger")
+    return logging.getLogger("BirthdayLogger")
 
     def sendNotificationWithText(self, title, message, textMessage):
         r = requests.post('https://api.pushover.net/1/messages.json', {
