@@ -3,3 +3,4 @@ Secret.txt
 *.db
 *.csv
 *.log
+__pycache__/
