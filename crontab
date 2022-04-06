@@ -1,2 +1,2 @@
 TZ=America/Boise
-45 8 * * * bash /home/schmuck/script.sh > /home/schmuck/log.log 2>&1
+0 10 * * * bash /home/schmuck/script.sh > /home/schmuck/log.log 2>&1

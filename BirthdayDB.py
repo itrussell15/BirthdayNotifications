@@ -137,25 +137,28 @@ class Notifications:
               "title": title,
               "message": message,
               })
-        
+
 def loggingSetup():
     log_format = '%(asctime)s %(message)s'
     logging.basicConfig(filename='birthday.log',
                         format = log_format,
                         filemode = "a",
-                        level = logging.INFO)    
+                        level = logging.INFO)
     return logging.getLogger("BirthdayLogger")
 
 if __name__ == "__main__":
-    notify = Notifications()
-    db = BirthdayDB("/home/schmuck/Info.db")
-    for i in [0, 7, 30]:
-        date = datetime.date.today()
-        out = db.Query(i, date = date)
-        if len(out) >= 1:
-            # Send notification to phone about birthday upcoming
-            [notify.GenerateMessage(j, i) for j in out]
-    db.end()
-
+    print('Script started {}'.format(datetime.datetime.now())
     log = loggingSetup()
-    log.info("Script Complete {} messages sent".format(notify.sent_messages))
+    try:
+        notify = Notifications()
+        db = BirthdayDB("/home/schmuck/Info.db")
+        for i in [0, 7, 30]:
+            date = datetime.date.today()
+            out = db.Query(i, date = date)
+            if len(out) >= 1:
+                # Send notification to phone about birthday upcoming
+                [notify.GenerateMessage(j, i) for j in out]
+        db.end()
+        log.info("Script Complete {} messages sent".format(notify.sent_messages))
+    except Exception as e:
+        log.info(e)
