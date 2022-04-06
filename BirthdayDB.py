@@ -147,7 +147,7 @@ def loggingSetup():
     return logging.getLogger("BirthdayLogger")
 
 if __name__ == "__main__":
-    print('Script started {}'.format(datetime.datetime.now())
+    print('Script started {}'.format(datetime.datetime.now()))
     log = loggingSetup()
     try:
         notify = Notifications()
