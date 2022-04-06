@@ -16,8 +16,8 @@ Its a really simple system, that is made up of a SQLite database with peoples im
 
 ## Notifications.
 
-I sadly don't know how to write mobile apps, otherwise I would likely build it that way, so I used what I knew which was REST apis and python. I use the  [Pushover API](https://pushover.net/api) to send out my phone notification. You simply send a basic API request and it sends out a notification on your phone.
+I sadly don't know how to write mobile apps, otherwise I would likely build it that way, so I used what I knew which was REST apis and python. I use the  [Pushover API](https://pushover.net/api) to send out my phone notification. You simply send a basic API request and it sends out a notification on your phone. My database has a column to preload a custom message that I would like to send if it is the day of their birthday. On the day of their birthday the pushover app will have a link to this message as a shortcut that I have preloaded on my phone. I select the contact associated with that birthday notification and press send!
 
-## Future plans.
+## Future Plans
 
-Don't tell anyone, but I am hoping to build a messaging system that will actually send people a happy birthday message if I have some parameter that deems them worthy of an auto or pre-generated message. I would still get a notification that my the message was sent, but just would save myself a step if I didn't think I should call or do something that wasn't possible non-programmaticly. Feels a bit not personal, but I think that I would rather send a message than not remember and not do anything.
+Work on some logic to improve the handling of environment variables so that I am able to develop inside the docker environment more easily and not screw up file references.
