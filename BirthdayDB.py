@@ -117,7 +117,7 @@ class Notifications:
         self.sent_messages = 0
 
     def _loadKey(self):
-        with open("Secret.txt", 'r') as f:
+        with open("/home/schmuck/Secret.txt", 'r') as f:
             out = f.readlines()
         return out[0].strip(), out[1].strip()
 
@@ -142,7 +142,7 @@ class Notifications:
               "title": title,
               "message": message,
               })
-        
+
     def sendNotificationWithText(self, title, message, textMessage):
         r = requests.post('https://api.pushover.net/1/messages.json', {
               "token": self._apiKey,
@@ -151,11 +151,11 @@ class Notifications:
               "message": message,
               "url": "shortcuts://run-shortcut?name=BirthdayText&input={}".format(urllib.parse.quote(textMessage)),
               "url_title": "Send them a text!"
-              })        
+              })
 
 if __name__ == "__main__":
     notify = Notifications()
-    db = BirthdayDB("A:\\appsuser\\db\\Test.db")
+    db = BirthdayDB("/home/schmuck/Info.db")
     for i in [0, 7, 30]:
         date = datetime.date.today()
         out = db.Query(i, date = date)

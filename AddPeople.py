@@ -7,11 +7,15 @@ Created on Tue Mar 29 21:01:13 2022
 
 import pandas as pd
 from BirthdayDB import BirthdayDB
-
+import os
 
 birthdays = pd.read_csv("A:\\appsuser\\db\\EventNotifications\\Birthdays.csv")
 
-db = BirthdayDB("A:\\appsuser\\db\\Test.db")
+db_path = "A:\\appsuser\\db\\Test.db"
+if os.path.exists(db_path):
+    os.remove(db_path)
+    
+db = BirthdayDB(db_path)
 
 for i in birthdays.iterrows():
     items = i[1].values
