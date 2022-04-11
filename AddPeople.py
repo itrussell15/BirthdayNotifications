@@ -7,17 +7,19 @@ Created on Tue Mar 29 21:01:13 2022
 
 import pandas as pd
 from BirthdayDB import BirthdayDB
+import os
 
+birthdays = pd.read_csv("A:\\appsuser\\db\\EventNotifications\\Birthdays.csv")
 
-birthdays = pd.read_csv("Birthdays.csv")
+db_path = "A:\\appsuser\\db\\Test.db"
+if os.path.exists(db_path):
+    os.remove(db_path)
+    
+db = BirthdayDB(db_path)
 
-db = BirthdayDB("A:\\appsuser\\db\\Info.db")
-
-for i in birthdays[6:].iterrows():
+for i in birthdays.iterrows():
     items = i[1].values
-    try:
-        db.AddPerson(items[0], items[1], items[2], items[3], items[4])
-    except:
-        pass
+    # print(items)
+    db.AddPerson(items[0], items[1], items[2], items[3], items[4], items[5])
 
 db.end()

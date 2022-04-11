@@ -10,12 +10,12 @@ import os
 import datetime
 import time
 import logging
+import urllib.parse
 
 class DBManage:
 
     def __init__(self, location):
         self._isEmpty = self._checkExistence(location)
-        # if not self._isEmpty:
         self._con = sqlite3.connect(location)
         self._cur = self._con.cursor()
 
@@ -48,7 +48,6 @@ class DBManage:
             command += '''"{}"'''.format(v[0])
             command += " "
             command += v[1]
-            # if n != len(v):
             command += ",\n"
         if primaryKey:
             command += "PRIMARY KEY "
@@ -72,12 +71,11 @@ class BirthdayDB(DBManage):
         super().__init__(location)
         self._tableName = "Birthdays"
         self._CreateTable()
-
-    def AddPerson(self, fname, lname, birthday, birthLocation = None, relationship= None):
+    def AddPerson(self, fname, lname, birthday, birthLocation = None, relationship= None, customMessage = None):
         command = '''
-            INSERT INTO {}(FirstName, LastName, Birthday, BirthLocation, Relationship) \
-                VALUES (?, ?, ?, ?, ?)'''.format(self._tableName)
-        self._cur.execute(command, (fname, lname, birthday, birthLocation, relationship, ))
+            INSERT INTO {}(FirstName, LastName, Birthday, BirthLocation, Relationship, customMessage) \
+                VALUES (?, ?, ?, ?, ?, ?)'''.format(self._tableName)
+        self._cur.execute(command, (fname, lname, birthday, birthLocation, relationship, customMessage,))
 
     def _CreateTable(self):
         self.create(self._tableName,
@@ -85,14 +83,17 @@ class BirthdayDB(DBManage):
                     "LastName": "TEXT NOT NULL",
                     "Birthday": "TEXT NOT NULL",
                     "BirthLocation": "TEXT",
-                    "Relationship": "TEXT"},
-                    primaryKey = ["FirstName", "LastName"])
+                    "Relationship": "TEXT",
+                    "customMessage": "TEXT"},
+                    primaryKey = ["FirstName", "LastName"]
+                    )
 
     def Query(self, length, date = datetime.date.today(), **kwargs):
         future = date + datetime.timedelta(days = length)
         out = super().query("*",
                   self._tableName,
                   where = '''WHERE Birthday = "{}"'''.format(self.NoYear(future)))
+
         return [self.Person(i) for i in out]
 
     NoYear = lambda self, x: "-".join(str(x).split("-")[1:])
@@ -108,6 +109,7 @@ class BirthdayDB(DBManage):
             self.birthday = row[2]
             self.birthplace = row[3]
             self.relationship = row[4]
+            self.customMessage = row[5]
 
 class Notifications:
 
@@ -125,10 +127,14 @@ class Notifications:
         body = "Your {} {} {} has a birthday ".format(out.relationship, out.fname, out.lname)
         if time == 0:
             body += "today!"
+            if out.customMessage:
+                self.sendNotificationWithText(title, body, out.customMessage)
+            else:
+                self.sendNotification(title, body)
         else:
             body += "{} days from now!".format(time)
+            self.sendNotification(title, body)
         self.sent_messages +=1
-        self.sendNotification(title, body)
 
     def sendNotification(self, title, message):
         r = requests.post('https://api.pushover.net/1/messages.json', {
@@ -137,25 +143,39 @@ class Notifications:
               "title": title,
               "message": message,
               })
-        
+
+    def sendNotificationWithText(self, title, message, textMessage):
+        r = requests.post('https://api.pushover.net/1/messages.json', {
+              "token": self._apiKey,
+              "user": self._userKey,
+              "title": title,
+              "message": message,
+              "url": "shortcuts://run-shortcut?name=BirthdayText&input={}".format(urllib.parse.quote(textMessage)),
+              "url_title": "Send them a text!"
+              })
+
 def loggingSetup():
     log_format = '%(asctime)s %(message)s'
-    logging.basicConfig(filename='birthday.log',
+    logging.basicConfig(filename='/home/schmuck/birthday.log',
                         format = log_format,
                         filemode = "a",
-                        level = logging.INFO)    
+                        level = logging.INFO)
     return logging.getLogger("BirthdayLogger")
 
 if __name__ == "__main__":
-    notify = Notifications()
-    db = BirthdayDB("/home/schmuck/Info.db")
-    for i in [0, 7, 30]:
-        date = datetime.date.today()
-        out = db.Query(i, date = date)
-        if len(out) >= 1:
-            # Send notification to phone about birthday upcoming
-            [notify.GenerateMessage(j, i) for j in out]
-    db.end()
-
     log = loggingSetup()
-    log.info("Script Complete {} messages sent".format(notify.sent_messages))
+    log.info("Program started")
+    print("Script running @ {}".format(datetime.datetime.now()))
+    try:
+        notify = Notifications()
+        db = BirthdayDB("/home/schmuck/Info.db")
+        for i in [0, 7, 30]:
+            date = datetime.date.today()
+            out = db.Query(i, date = date)
+            if len(out) >= 1:
+                # Send notification to phone about birthday upcoming
+                [notify.GenerateMessage(j, i) for j in out]
+        db.end()
+        log.info("{} messages sent".format(notify.sent_messages))
+    except Exception as e:
+        log.info(str(e))
