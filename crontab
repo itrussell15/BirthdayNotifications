@@ -7,5 +7,6 @@
 # |  |  |  |  |
 # *  *  *  *  * user-name command to be executed
 
-30 10 * * * root /script.sh
+# Runs at 10:00 AM. BE CAREFUL OF TIMEZONES. This will likely not be in your timezone.
+0 16 * * * root /script.sh
 # An empty line is required at the end of this file for a valid cron file.

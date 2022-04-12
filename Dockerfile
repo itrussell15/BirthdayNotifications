@@ -1,5 +1,8 @@
 FROM ubuntu:latest
 
+#Set environment variable
+ENV INSIDE_DOCKER Yes
+
 # Install cron
 RUN apt-get update
 RUN apt-get install cron
