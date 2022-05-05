@@ -1,2 +1,2 @@
-TZ=America/Boise
-0 10 * * * bash /home/schmuck/script.sh > /home/schmuck/log.log 2>&1
+00 16 * * * /script.sh
+#Empty line is required at the end of this file for a valid cron file.
