@@ -4,3 +4,4 @@ Secret.txt
 *.csv
 *.log
 __pycache__
+*.csv#
