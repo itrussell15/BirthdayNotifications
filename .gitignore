@@ -1,4 +1,4 @@
-Secret.txt
+*.txt
 *.swp
 *.db
 *.csv

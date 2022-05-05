@@ -6,7 +6,7 @@ Created on Thu Mar 10 23:03:46 2022
 """
 
 import sqlite3, requests
-import os
+import os, platform
 import datetime
 import time
 import logging
@@ -114,12 +114,12 @@ class BirthdayDB(DBManage):
 
 class Notifications:
 
-    def __init__(self):
-        self._apiKey, self._userKey = self._loadKey()
+    def __init__(self, secret):
+        self._apiKey, self._userKey = self._loadKey(secret)
         self.sent_messages = 0
 
-    def _loadKey(self):
-        with open("/home/schmuck/Secret.txt", 'r') as f:
+    def _loadKey(self, path):
+        with open(path, 'r') as f:
             out = f.readlines()
         return out[0].strip(), out[1].strip()
 
@@ -155,20 +155,49 @@ class Notifications:
               "url_title": "Send them a text!"
               })
 
-def loggingSetup():
+class SystemInformation:
+    
+    def __init__(self, devMode = False):
+        self.docker = True if os.environ.get("INSIDE_DOCKER") else False
+        self.os = platform.system()
+        basePath = self.determineBasePath(devMode)
+
+        self.notificationSecretLocation = "{}/Secret.txt".format(basePath)
+        self.databaseLocation = "{}/Info.db".format(basePath)
+        self.logging = "{}/birthday.log".format(basePath)
+
+    def determineBasePath(self, devMode):
+        if not self.docker:
+            if self.os == "Windows":
+                return "A:/appsuser/db/EventNotifications"
+            elif self.os == "Linux":
+                return "/run/user/1000/gvfs/smb-share:server=truenas.local,share=applications/appsuser/db/EventNotifications"
+            else:
+                pass
+        else:
+            return "/home/schmuck"
+
+def loggingSetup(path):
     log_format = '%(asctime)s %(message)s'
-    logging.basicConfig(filename='birthday.log',
+    logging.basicConfig(filename=path,
                         format = log_format,
                         filemode = "a",
-                        level = logging.INFO)
+                        level = logging.INFO,
+                        force=True)
     return logging.getLogger("BirthdayLogger")
 
+
 if __name__ == "__main__":
-    log = loggingSetup()
+
+    sysInfo = SystemInformation()
+
+    log = loggingSetup(sysInfo.logging)
     log.info("Program started")
+    print("Script running @ {}".format(datetime.datetime.now()))
+
     try:
-        notify = Notifications()
-        db = BirthdayDB("/home/schmuck/Info.db")
+        notify = Notifications(sysInfo.notificationSecretLocation)
+        db = BirthdayDB(sysInfo.databaseLocation)
         for i in [0, 7, 30]:
             date = datetime.date.today()
             out = db.Query(i, date = date)
@@ -176,6 +205,6 @@ if __name__ == "__main__":
                 # Send notification to phone about birthday upcoming
                 [notify.GenerateMessage(j, i) for j in out]
         db.end()
-        log.info("{} messages sent".format(notify.sent_messages))
+        log.info("{} messages sent from {} {} docker".format(notify.sent_messages, sysInfo.os, "inside" if sysInfo.docker else "outside"))
     except Exception as e:
-        log.info(str(e))
+        log.error(str(e))
