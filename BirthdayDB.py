@@ -171,7 +171,8 @@ class SystemInformation:
             if self.os == "Windows":
                 return "A:/appsuser/db/EventNotifications"
             elif self.os == "Linux":
-                return "/run/user/1000/gvfs/smb-share:server=truenas.local,share=applications/appsuser/db/EventNotifications"
+                return "/mnt/apps/appsuser/db/EventNotifications"
+                # return "/run/user/1000/gvfs/smb-share:server=truenas.local,share=applications/appsuser/db/EventNotifications"
             else:
                 pass
         else:
