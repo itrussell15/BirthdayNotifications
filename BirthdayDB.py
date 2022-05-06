@@ -6,12 +6,9 @@ Created on Thu Mar 10 23:03:46 2022
 """
 
 import sqlite3, requests
-import os, platform
 import datetime
 import time
-import logging
 import urllib.parse
-import shutil
 
 class DBManage:
 
@@ -158,85 +155,3 @@ class Notifications:
               "url_title": "Send them a text!"
               })
 
-class SystemInformation:
-
-
-    def __init__(self, devMode = False):
-        self.docker = True if os.environ.get("INSIDE_DOCKER") else False
-        self.os = platform.system()
-        self._basePath = self.determineBasePath(devMode)
-        
-        self._dbFile = "Info.db"
-        self._loggingFile = "birthday.log"
-        self._secretFile = "Secret.txt"
-
-        self.databaseLocation = self._getFilePath(self._dbFile)
-        self.logging = self._getFilePath(self._loggingFile) 
-        self.notificationSecretLocation = self._getFilePath(self._secretFile)
-
-    def determineBasePath(self, devMode):
-        if not self.docker:
-            if self.os == "Windows":
-                return "A:/appsuser/db/EventNotifications"
-            elif self.os == "Linux":
-                return "/mnt/apps/appsuser/db/EventNotifications"
-                # return "/run/user/1000/gvfs/smb-share:server=truenas.local,share=applications/appsuser/db/EventNotifications"
-            else:
-                pass
-        else:
-            # If it is running in docker
-            return "/home/schmuck"
-    
-    _getFilePath = lambda self, x: "{}/{}".format(self._basePath, x)
-    
-    def _getModifiedTime(self, file):
-        return datetime.datetime.fromtimestamp(os.path.getmtime(self._basePath + "/{}".format(file)))
-    
-    def getLastRunTime(self):
-        return self._getModifiedTime("birthday.log")
-    
-    def getBirthdayModificationTime(self):
-        return self._getModifiedTime("Birthdays.csv")
-    
-    def createDBBackup(self):
-        filename = datetime.datetime.now().strftime("%m-%d-%y_%H.%M")
-        # print(filename)
-        shutil.copyfile(self.databaseLocation, self._getFilePath("backups/{}.db".format(filename)))
-
-def loggingSetup(path):
-    log_format = '%(asctime)s %(message)s'
-    logging.basicConfig(filename=path,
-                        format = log_format,
-                        filemode = "a",
-                        level = logging.INFO,
-                        force = True)
-    return logging.getLogger("BirthdayLogger")
-
-# if __name__ == "__main__":
-
-# sysInfo = SystemInformation()
-# notify = Notifications(sysInfo.notificationSecretLocation)
-
-# # REMOVE WHEN CONFIDENT THE PROGRAM RUNS WHEN SUPPOSED TO
-# notify.sendNotification("System Ran", "Your program ran successfully!")
-# print("PROGRAM RAN")
-
-# log = loggingSetup(sysInfo.logging)
-# log.info("Program started")
-
-# print("Script running @ {}".format(datetime.datetime.now()))
-
-# try:
-
-#     db = BirthdayDB(sysInfo.databaseLocation)
-#     for i in [0, 7, 30]:
-#         date = datetime.date.today()
-#         out = db.Query(i, date = date)
-#         if len(out) >= 1:
-#             # Send notification to phone about birthday upcoming
-#             [notify.GenerateMessage(j, i) for j in out]
-#     db.end()
-#     log.info("{} messages sent from {} {} docker".format(notify.sent_messages, sysInfo.os, "inside" if sysInfo.docker else "outside"))
-# except Exception as e:
-#     log.error(str(e))
-#     # print(str(e))

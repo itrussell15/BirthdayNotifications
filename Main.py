@@ -5,24 +5,22 @@ Created on Sat Apr 30 14:34:13 2022
 @author: Schmuck
 """
 
-from BirthdayDB import BirthdayDB, SystemInformation, Notifications, loggingSetup
+from BirthdayDB import BirthdayDB, Notifications
+from Systems import SystemInformation, loggingSetup
 import datetime, os
 
 
 sysInfo = SystemInformation()
 log = loggingSetup(sysInfo.logging)
+notify = Notifications(sysInfo.notificationSecretLocation)
 
 # Add the new modifications into the database.
 if sysInfo.getLastRunTime() < sysInfo.getBirthdayModificationTime():
     print("New Modifications!")
     sysInfo.createDBBackup()
+    
     log.info("Birthday file modifications detected. Database updated and backup created")
     
-    
-    
-
-notify = Notifications(sysInfo.notificationSecretLocation)
-
 # REMOVE WHEN CONFIDENT THE PROGRAM RUNS WHEN SUPPOSED TO
 # notify.sendNotification("System Ran", "Your program ran successfully!")
 # print("PROGRAM RAN")
