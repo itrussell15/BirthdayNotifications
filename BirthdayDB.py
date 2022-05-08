@@ -71,6 +71,7 @@ class BirthdayDB(DBManage):
         super().__init__(location)
         self._tableName = "Birthdays"
         self._CreateTable()
+        
     def AddPerson(self, fname, lname, birthday, birthLocation = None, relationship= None, customMessage = None):
         command = '''
             INSERT INTO {}(FirstName, LastName, Birthday, BirthLocation, Relationship, customMessage) \
@@ -94,7 +95,6 @@ class BirthdayDB(DBManage):
                   self._tableName,
                   where = '''WHERE Birthday = "{}"'''.format(self.NoYear(future)))
 
-        print(out)
         return [self.Person(i) for i in out]
 
     NoYear = lambda self, x: "-".join(str(x).split("-")[1:])
@@ -186,26 +186,3 @@ def loggingSetup(path):
                         level = logging.INFO,
                         force=True)
     return logging.getLogger("BirthdayLogger")
-
-
-if __name__ == "__main__":
-
-    sysInfo = SystemInformation()
-
-    log = loggingSetup(sysInfo.logging)
-    log.info("Program started")
-    print("Script running @ {}".format(datetime.datetime.now()))
-
-    try:
-        notify = Notifications(sysInfo.notificationSecretLocation)
-        db = BirthdayDB(sysInfo.databaseLocation)
-        for i in [0, 7, 30]:
-            date = datetime.date.today()
-            out = db.Query(i, date = date)
-            if len(out) >= 1:
-                # Send notification to phone about birthday upcoming
-                [notify.GenerateMessage(j, i) for j in out]
-        db.end()
-        log.info("{} messages sent from {} {} docker".format(notify.sent_messages, sysInfo.os, "inside" if sysInfo.docker else "outside"))
-    except Exception as e:
-        log.error(str(e))

@@ -16,10 +16,7 @@ notify = Notifications(sysInfo.notificationSecretLocation)
 notify.sendNotification("System Ran", "Your program ran successfully!")
 print("PROGRAM RAN")
 
-
 log.info("Program started")
-
-print("Script running @ {}".format(datetime.datetime.now()))
 
 try:
     run_time = datetime.datetime.now()
