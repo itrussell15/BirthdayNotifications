@@ -33,7 +33,7 @@ class FileManager:
             self.os = platform.system()
             self._basePath = self.determineBasePath(devMode)
             
-            self._dbFile = "Test.db"
+            self._dbFile = "Info.db"
             self._loggingFile = "birthday.log"
             self._secretFile = "Secret.txt"
             self._csvFile = "Birthdays.csv"
