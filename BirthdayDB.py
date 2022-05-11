@@ -6,7 +6,7 @@ Created on Thu Mar 10 23:03:46 2022
 """
 
 import sqlite3, requests
-import datetime
+import datetime, os
 import time
 import urllib.parse
 
@@ -154,4 +154,3 @@ class Notifications:
               "url": "shortcuts://run-shortcut?name=BirthdayText&input={}".format(urllib.parse.quote(textMessage)),
               "url_title": "Send them a text!"
               })
-
