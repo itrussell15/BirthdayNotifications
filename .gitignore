@@ -1,7 +1,9 @@
-*.txt
+Secret.txt
 *.swp
 *.db
 *.csv
 *.log
 __pycache__
 *.csv#
+!Birthdays_Example.csv
+*.orig

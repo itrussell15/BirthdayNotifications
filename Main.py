@@ -5,24 +5,33 @@ Created on Thu May  5 17:39:17 2022
 @author: Schmuck
 """
 
-from BirthdayDB import SystemInformation, Notifications, BirthdayDB, loggingSetup
-import datetime
+from BirthdayDB import BirthdayDB, Notifications
+from Systems import FileManager, loggingSetup
+import datetime, os
 
-sysInfo = SystemInformation()
-log = loggingSetup(sysInfo.logging)
-notify = Notifications(sysInfo.notificationSecretLocation)
 
-#REMOVE WHEN CONFIDENT THE PROGRAM RUNS WHEN SUPPOSED TO
-notify.sendNotification("System Ran", "Your program ran successfully!")
-print("PROGRAM RAN")
-
-log.info("Program started")
+files = FileManager()
+log = loggingSetup(files.sysInfo.logging)
+notify = Notifications(files.sysInfo.notificationSecretLocation)
+db = BirthdayDB(files.sysInfo.databaseLocation)
+    
+# REMOVE WHEN CONFIDENT THE PROGRAM RUNS WHEN SUPPOSED TO
+# notify.sendNotification("System Ran", "Your program ran successfully!")
+print("Script running @ {}".format(datetime.datetime.now()))
 
 try:
-    run_time = datetime.datetime.now()
-    
-    
-    db = BirthdayDB(sysInfo.databaseLocation)
+    # Add the new modifications into the database.
+    if files.hasUpdates():
+        print("New Modifications!")
+        files.createDBBackup()
+        db.DeleteRows()
+        rows = files.loadCsv()
+        for i in rows.iterrows():
+            items = i[1].values
+            db.AddPerson(items[0], items[1], items[2], items[3], items[4], items[5])
+        log.info("Birthday file modifications detected. Database updated and backup created")
+
+    # Check for any upcoming birthdays and send notification
     for i in [0, 7, 30]:
         date = datetime.date.today()
         out = db.Query(i, date = date)
@@ -30,7 +39,12 @@ try:
             # Send notification to phone about birthday upcoming
             [notify.GenerateMessage(j, i) for j in out]
     db.end()
-    log.info("{} messages sent from {} {} docker".format(notify.sent_messages, sysInfo.os, "inside" if sysInfo.docker else "outside"))
+    # Log outcomes
+    log.info("{} messages sent from {} {} docker".format(
+        notify.sent_messages,
+        files.sysInfo.os,
+        "inside" if files.sysInfo.docker else "outside"))
+    
 except Exception as e:
     log.error(str(e))
     # print(str(e))
