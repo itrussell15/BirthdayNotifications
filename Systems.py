@@ -27,7 +27,6 @@ class FileManager:
         with open(self.sysInfo.csvLocation) as file:
             csvFile = csv.reader(file, delimiter = ",")
             return [i for i in csvFile][1:]
-        # return pd.read_csv(self.sysInfo.csvLocation)
 
     class SystemInformation:
     
@@ -36,7 +35,7 @@ class FileManager:
             self.os = platform.system()
             self._basePath = self.determineBasePath(devMode)
             
-            self._dbFile = "Info.db"
+            self._dbFile = "Test.db"
             self._loggingFile = "birthday.log"
             self._secretFile = "Secret.txt"
             self._csvFile = "Birthdays.csv"
