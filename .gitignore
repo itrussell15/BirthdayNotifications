@@ -7,3 +7,4 @@ __pycache__
 *.csv#
 !Birthdays_Example.csv
 *.orig
+*.db-journal

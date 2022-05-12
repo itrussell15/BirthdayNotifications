@@ -9,16 +9,15 @@ from BirthdayDB import BirthdayDB, Notifications
 from Systems import FileManager, loggingSetup
 import datetime, os
 
-
 files = FileManager()
 log = loggingSetup(files.sysInfo.logging)
 notify = Notifications(files.sysInfo.notificationSecretLocation)
 db = BirthdayDB(files.sysInfo.databaseLocation)
     
-# REMOVE WHEN CONFIDENT THE PROGRAM RUNS WHEN SUPPOSED TO
+#### REMOVE WHEN CONFIDENT THE PROGRAM RUNS WHEN SUPPOSED TO
 # notify.sendNotification("System Ran", "Your program ran successfully!")
-print("Script running @ {}".format(datetime.datetime.now()))
 
+print("Script running @ {}".format(datetime.datetime.now()))
 try:
     # Add the new modifications into the database.
     if files.hasUpdates():

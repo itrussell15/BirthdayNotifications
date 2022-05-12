@@ -154,35 +154,3 @@ class Notifications:
               "url": "shortcuts://run-shortcut?name=BirthdayText&input={}".format(urllib.parse.quote(textMessage)),
               "url_title": "Send them a text!"
               })
-
-class SystemInformation:
-    
-    def __init__(self, devMode = False):
-        self.docker = True if os.environ.get("INSIDE_DOCKER") else False
-        self.os = platform.system()
-        basePath = self.determineBasePath(devMode)
-
-        self.notificationSecretLocation = "{}/Secret.txt".format(basePath)
-        self.databaseLocation = "{}/Info.db".format(basePath)
-        self.logging = "{}/birthday.log".format(basePath)
-
-    def determineBasePath(self, devMode):
-        if not self.docker:
-            if self.os == "Windows":
-                return "A:/appsuser/db/EventNotifications"
-            elif self.os == "Linux":
-                return "/mnt/apps/appsuser/db/EventNotifications"
-                # return "/run/user/1000/gvfs/smb-share:server=truenas.local,share=applications/appsuser/db/EventNotifications"
-            else:
-                pass
-        else:
-            return "/home/schmuck"
-
-def loggingSetup(path):
-    log_format = '%(asctime)s %(message)s'
-    logging.basicConfig(filename=path,
-                        format = log_format,
-                        filemode = "a",
-                        level = logging.INFO,
-                        force=True)
-    return logging.getLogger("BirthdayLogger")
