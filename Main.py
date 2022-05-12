@@ -25,10 +25,8 @@ try:
         print("New Modifications!")
         files.createDBBackup()
         db.DeleteRows()
-        rows = files.loadCsv()
-        for i in rows.iterrows():
-            items = i[1].values
-            db.AddPerson(items[0], items[1], items[2], items[3], items[4], items[5])
+        for item in files.loadCsv():
+            db.AddPerson(item[0], item[1], item[2], item[3], item[4], item[5])
         log.info("Birthday file modifications detected. Database updated and backup created")
 
     # Check for any upcoming birthdays and send notification

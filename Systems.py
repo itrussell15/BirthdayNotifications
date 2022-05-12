@@ -9,7 +9,7 @@ import os, platform
 import datetime
 import shutil
 import logging
-import pandas as pd
+import csv
 
 class FileManager:
     
@@ -24,7 +24,10 @@ class FileManager:
         shutil.copyfile(self.sysInfo.databaseLocation, self.sysInfo.getFilePath("backups/{}.db".format(filename)))
         
     def loadCsv(self):
-        return pd.read_csv(self.sysInfo.csvLocation)
+        with open(self.sysInfo.csvLocation) as file:
+            csvFile = csv.reader(file, delimiter = ",")
+            return [i for i in csvFile][1:]
+        # return pd.read_csv(self.sysInfo.csvLocation)
 
     class SystemInformation:
     
@@ -75,3 +78,9 @@ def loggingSetup(path):
                         level = logging.INFO,
                         force = True)
     return logging.getLogger("BirthdayLogger")
+
+# files = FileManager()
+# # print([i for i in files.loadCsv()])
+# for item in files.loadCsv():
+#     print("{} {} {} {} {}".format(item[0], item[1], item[2], item[3], item[4], item[5]))
+    

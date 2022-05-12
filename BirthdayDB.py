@@ -125,7 +125,7 @@ class Notifications:
 
     def GenerateMessage(self, out, time):
         title = "Birthday Alert! 🎂🎉"
-        body = "Your {} {} {} has a birthday ".format(out.relationship, out.fname, out.lname)
+        body = "Your {} {} {} has a birthday ".format(out.relationship.lower(), out.fname, out.lname)
         if time == 0:
             body += "today!"
             if out.customMessage:
