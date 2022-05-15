@@ -44,4 +44,4 @@ try:
     
 except Exception as e:
     log.error(str(e))
-    # print(str(e))
+    print(str(e))
