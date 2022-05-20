@@ -69,17 +69,31 @@ class FileManager:
         def getBirthdayModificationTime(self):
             return self._getModifiedTime("Birthdays.csv")
 
-def loggingSetup(path):
-    log_format = '%(asctime)s %(message)s'
-    logging.basicConfig(filename = path,
-                        format = log_format,
-                        filemode = "a",
-                        level = logging.INFO,
-                        force = True)
-    return logging.getLogger("BirthdayLogger")
-
-# files = FileManager()
-# # print([i for i in files.loadCsv()])
-# for item in files.loadCsv():
-#     print("{} {} {} {} {}".format(item[0], item[1], item[2], item[3], item[4], item[5]))
+class Logging:
     
+    def __init__(self, path):
+        self._log = self._loggingSetup(path)
+        
+    def info(self, message):
+        self._log.info(message)
+        
+    @staticmethod
+    def _loggingSetup(path):
+        log_format = '%(asctime)s %(message)s'
+        logging.basicConfig(filename = path,
+                            format = log_format,
+                            filemode = "a",
+                            level = logging.INFO,
+                            force = True)
+        return logging.getLogger("BirthdayLogger")
+    
+    def filterNotification(self, person, diff):
+        if diff != 0:
+            self.info("{} {} has a birthday in {} days from now".format(
+                person.fname,
+                person.lname,
+                diff))
+        else:
+            self.info("It is {} {} birthday today!".format(
+                person.fname,
+                person.lname))
