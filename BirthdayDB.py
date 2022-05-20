@@ -111,6 +111,16 @@ class BirthdayDB(DBManage):
             self.birthplace = row[3]
             self.relationship = row[4]
             self.customMessage = row[5]
+            self.notifications = tuple([self.extractBool(row[6]), 
+                                        self.extractBool(row[7]), 
+                                        self.extractBool(row[8])])
+            # self.Day30Notification = bool(row[6])
+            # self.Day7Notification = bool(row[7])
+            # self.BirthdayNotification = bool(row[8])
+            
+        @staticmethod
+        def extractBool(item):
+            return True if item == "TRUE" else False
 
 class Notifications:
 
