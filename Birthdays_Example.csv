@@ -1,6 +1,6 @@
-fname,lname,birthday,BirthLocation,Relationship,customMessage
-Tom,Hanks,07-09,"Concord, CA",Childhood Favorite Actor,WILSONNNNNN!
-David ,Beckham,05-02,,Favorite Soccer Player,Way to Bend It!
-Chelsea,Cutler,02-08,,Favorite Artist,Have a seltzie! Happy Birthday!!!
-Phoebe,Bridgers,08-17,,Celeb Crush,You rock!
-Stephen,Hawking,01-08,,Scientific Icon,Happy Birthday!
+Day30Notification,Day7Notification,BirthdayNotification,BirthLocation,Relationship,customMessage,Day30Notification,Day7Notification,BirthdayNotification
+Tom,Hanks,07-09,"Concord, CA",Childhood Favorite Actor,WILSONNNNNN!,FALSE,FALSE,TRUE
+David ,Beckham,05-02,,Favorite Soccer Player,Way to Bend It!,TRUE,TRUE,TRUE
+Chelsea,Cutler,02-08,,Favorite Artist,Have a seltzie! Happy Birthday!!!,FALSE,TRUE,TRUE
+Phoebe,Bridgers,08-17,,Celeb Crush,You rock!,TRUE,TRUE,TRUE
+Stephen,Hawking,01-08,,Scientific Icon,Happy Birthday!,FALSE,TRUE,TRUE

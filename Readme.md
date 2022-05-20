@@ -22,8 +22,10 @@ I sadly don't know how to write mobile apps, otherwise I would likely build it t
 
 I wanted to be able to modify my database somewhat easily as I find out when their birthdays. I have stored all the birthdays in a csv file and can modify this csv to reflect what is in my SQL file. Every time the program runs, it checks for changes in the csv and updates the SQL database to reflect these changes. We also store a backup instance of the DB file every time we modify it so that I can roll back if something bad happens and my database is in a bad spot. This just makes it easier for me to manage all the dates and make sure I don't forget people that I want to reach out to. You can see the example csv file that I store information in.
 
+## Notification Filtering
+
+On the spreadsheet, there is an option to turn on and off notifications for birthday, 7 days before, and 30 days before. This allows the ability to stop potentially spammy activity on your phone. I am still unsure whether I would want more time to be able to know when it is someone's birthday or if the day of is fine.
+
 ## Future plans.
 
-I have a feeling that the messages may get a bit spammy with 3 messages per date especially as my DB continues to grow. I want to add another column in the DB that will just allow me to send a single message when it is a person I want to simply say happy birthday to and don't need a warning for a gift or time to prepare something for them. For example, I want to have a heads up that my mom's birthday is in a month, but I don't really need to know that about my coworker. I just don't want to work with them and find out it is their birthday at the end of the day.
-
-I have also thought about adding special dates that aren't necessarily birthdays. Maybe anniversaries or other special dates that I would want reminders for just as a personal reminder or to reach out to people that are celebrating something. The logic would be similar, but I would want another database these dates would live in.
+I have thought about adding special dates that aren't necessarily birthdays. Maybe anniversaries or other special dates that I would want reminders for just as a personal reminder or to reach out to people that are celebrating something. The logic would be similar, but I would want another database these dates would live in.
