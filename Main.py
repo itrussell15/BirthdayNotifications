@@ -19,7 +19,7 @@ db = BirthdayDB(files.sysInfo.databaseLocation)
 
 print("Script running @ {}".format(datetime.datetime.now()))
 try:
-# Add the new modifications into the database.
+    # Add the new modifications into the database.
     if files.hasUpdates():
         print("New Modifications!")
         files.createDBBackup()
@@ -27,8 +27,8 @@ try:
         for item in files.loadCsv():
             db.AddPerson(item[0], item[1], item[2], item[3], item[4], item[5])
         log.info("Birthday file modifications detected. Database updated and backup created")
-    
-    # Check for any upcoming birthdays and send notification
+
+# Check for any upcoming birthdays and send notification
     for n, i in enumerate([0, 7, 30]):
         date = datetime.date.today()
         out = db.Query(i, date = date)
@@ -48,7 +48,9 @@ try:
         notify.sent_messages,
         files.sysInfo.os,
         "inside" if files.sysInfo.docker else "outside"))
-  
+
+
 except Exception as e:
     log.error(str(e))
-    print(str(e))
+    notify.sendNotification("ERROR", str(e))
+    # print(str(e))

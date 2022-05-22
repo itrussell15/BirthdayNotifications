@@ -76,6 +76,9 @@ class Logging:
         
     def info(self, message):
         self._log.info(message)
+    
+    def error(self, message):
+        self._log.error(message)
         
     @staticmethod
     def _loggingSetup(path):
