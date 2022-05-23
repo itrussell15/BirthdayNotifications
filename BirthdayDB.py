@@ -72,11 +72,21 @@ class BirthdayDB(DBManage):
         self._tableName = "Birthdays"
         self._CreateTable()
         
-    def AddPerson(self, fname, lname, birthday, birthLocation = None, relationship= None, customMessage = None):
+    def AddPerson(self, fname, lname, birthday, day30Not, day7Not, birthdayNot, birthLocation = None, relationship= None, customMessage = None):
         command = '''
-            INSERT INTO {}(FirstName, LastName, Birthday, BirthLocation, Relationship, customMessage) \
-                VALUES (?, ?, ?, ?, ?, ?)'''.format(self._tableName)
-        self._cur.execute(command, (fname, lname, birthday, birthLocation, relationship, customMessage,))
+            INSERT INTO {}(FirstName, LastName, Birthday, BirthLocation, Relationship, customMessage,\
+                           Day30Notification, Day7Notification, BirthdayNotification) \
+                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'''.format(self._tableName)
+        self._cur.execute(command,
+                          (fname,
+                           lname,
+                           birthday,
+                           birthLocation,
+                           relationship,
+                           customMessage,
+                           day30Not,
+                           day7Not,
+                           birthdayNot,))
 
     def _CreateTable(self):
         self.create(self._tableName,
@@ -85,7 +95,11 @@ class BirthdayDB(DBManage):
                     "Birthday": "TEXT NOT NULL",
                     "BirthLocation": "TEXT",
                     "Relationship": "TEXT",
-                    "customMessage": "TEXT"},
+                    "customMessage": "TEXT",
+                    "Day30Notification": "INTEGER",
+                    "Day7Notification": "INTEGER",
+                    "BirthdayNotification": "INTEGER"
+                    },
                     primaryKey = ["FirstName", "LastName"]
                     )
 
@@ -94,7 +108,6 @@ class BirthdayDB(DBManage):
         out = super().query("*",
                   self._tableName,
                   where = '''WHERE Birthday = "{}"'''.format(self.NoYear(future)))
-
         return [self.Person(i) for i in out]
 
     NoYear = lambda self, x: "-".join(str(x).split("-")[1:])
@@ -120,6 +133,7 @@ class BirthdayDB(DBManage):
             
         @staticmethod
         def extractBool(item):
+            # print(item)
             return True if item == "TRUE" else False
 
 class Notifications:
