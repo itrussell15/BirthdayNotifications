@@ -127,9 +127,6 @@ class BirthdayDB(DBManage):
             self.notifications = tuple([self.extractBool(row[6]), 
                                         self.extractBool(row[7]), 
                                         self.extractBool(row[8])])
-            # self.Day30Notification = bool(row[6])
-            # self.Day7Notification = bool(row[7])
-            # self.BirthdayNotification = bool(row[8])
             
         @staticmethod
         def extractBool(item):
