@@ -48,9 +48,9 @@ class FileManager:
         def determineBasePath(self, devMode):
             if not self.docker:
                 if self.os == "Windows":
-                    return "A:/apps_data/isaac/db/EventNotifications"
+                    return "S:\Files\ActiveApps\db\EventNotifications"
                 elif self.os == "Linux":
-                    return "/mnt/apps/apps_data/isaac/db/EventNotifications"
+                    return "/mnt/Storage/Files/ActiveApps/db/EventNotifications"
                 else:
                     pass
             else:
