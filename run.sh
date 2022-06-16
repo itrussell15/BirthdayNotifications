@@ -1,1 +1,1 @@
-python3 /mnt/Storage/Files/ActiveApps/db/EventNotifications/Main.py >> /mnt/Storage/Files/ActiveApps/db/EventNotifications/run.log 2>&1
+python3 /mnt/Storage/Files/ActiveApps/birthdays/Main.py >> /mnt/Storage/Files/ActiveApps/birthdays/run.log 2>&1

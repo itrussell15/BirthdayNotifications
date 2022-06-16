@@ -50,7 +50,7 @@ class FileManager:
                 if self.os == "Windows":
                     return "S:\Files\ActiveApps\db\EventNotifications"
                 elif self.os == "Linux":
-                    return "/mnt/Storage/Files/ActiveApps/db/EventNotifications"
+                    return "/mnt/Storage/Files/ActiveApps/birthdays"
                 else:
                     pass
             else:
