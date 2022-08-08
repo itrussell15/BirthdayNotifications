@@ -8,3 +8,4 @@ __pycache__
 !Birthdays_Example.csv
 *.orig
 *.db-journal
+docker-cron example/

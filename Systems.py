@@ -45,12 +45,14 @@ class FileManager:
             self.notificationSecretLocation = self.getFilePath(self._secretFile)
             self.csvLocation = self.getFilePath(self._csvFile)
 
+        # TODO figure out why I can't just use os.getcwd()
         def determineBasePath(self, devMode):
             if not self.docker:
                 if self.os == "Windows":
                     return "S:\Files\ActiveApps\db\EventNotifications"
                 elif self.os == "Linux":
-                    return "/mnt/Storage/Files/ActiveApps/birthdays"
+                    # return "/mnt/Storage/Files/ActiveApps/birthdays"
+                    return os.getcwd()
                 else:
                     pass
             else:

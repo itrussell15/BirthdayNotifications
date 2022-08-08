@@ -71,7 +71,7 @@ class BirthdayDB(DBManage):
         super().__init__(location)
         self._tableName = "Birthdays"
         self._CreateTable()
-        
+
     def AddPerson(self, fname, lname, birthday, day30Not, day7Not, birthdayNot, birthLocation = None, relationship= None, customMessage = None):
         command = '''
             INSERT INTO {}(FirstName, LastName, Birthday, BirthLocation, Relationship, customMessage,\
@@ -124,10 +124,10 @@ class BirthdayDB(DBManage):
             self.birthplace = row[3]
             self.relationship = row[4]
             self.customMessage = row[5]
-            self.notifications = tuple([self.extractBool(row[6]), 
-                                        self.extractBool(row[7]), 
+            self.notifications = tuple([self.extractBool(row[6]),
+                                        self.extractBool(row[7]),
                                         self.extractBool(row[8])])
-            
+
         @staticmethod
         def extractBool(item):
             # print(item)
