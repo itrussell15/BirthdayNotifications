@@ -3,6 +3,8 @@ Secret.txt
 *.db
 *.csv
 *.log
+*.pyc
+*.save
 __pycache__
 *.csv#
 !Birthdays_Example.csv

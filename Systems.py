@@ -55,7 +55,7 @@ class FileManager:
                     # return os.getcwd()
                     return "/home/itrussell15/birthdays/BirthdayNotifications"
                 else:
-                    pass
+                    return "/Users/isaactrussell/Documents/Coding/Birthdays"
             else:
                 # If it is running in docker
                 return "/home/schmuck"
@@ -101,3 +101,7 @@ class Logging:
             self.info("It is {} {} birthday today!".format(
                 person.fname,
                 person.lname))
+            
+if __name__ == "__main__":
+    files = FileManager()
+    print(files.sysInfo.csvLocation)

@@ -175,3 +175,7 @@ class Notifications:
               "url": "shortcuts://run-shortcut?name=BirthdayText&input={}".format(urllib.parse.quote(textMessage)),
               "url_title": "Send them a text!"
               })
+
+
+    
+    
