@@ -1,1 +1,1 @@
-python3 /mnt/Storage/Files/ActiveApps/birthdays/Main.py >> /mnt/Storage/Files/ActiveApps/birthdays/run.log 2>&1
+python3 /home/itrussell15/birthdays/BirthdayNotifications/Main.py >> /home/itrussell15/birthdays/BirthdayNotifications/run.log 2>&1

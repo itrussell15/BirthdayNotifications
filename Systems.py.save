@@ -45,15 +45,13 @@ class FileManager:
             self.notificationSecretLocation = self.getFilePath(self._secretFile)
             self.csvLocation = self.getFilePath(self._csvFile)
 
-        # TODO figure out why I can't just use os.getcwd()
         def determineBasePath(self, devMode):
             if not self.docker:
                 if self.os == "Windows":
                     return "S:\Files\ActiveApps\db\EventNotifications"
                 elif self.os == "Linux":
-                    # return "/mnt/Storage/Files/ActiveApps/birthdays"
-                    # return os.getcwd()
-                    return "/home/itrussell15/birthdays/BirthdayNotifications"
+		    print)
+                    return "home/itrussell15/birthdays/BirthdayNotifications"
                 else:
                     pass
             else:
@@ -88,7 +86,8 @@ class Logging:
         logging.basicConfig(filename = path,
                             format = log_format,
                             filemode = "a",
-                            level = logging.INFO)
+                            level = logging.INFO,
+                            force = True)
         return logging.getLogger("BirthdayLogger")
 
     def filterNotification(self, person, diff):
