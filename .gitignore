@@ -11,3 +11,4 @@ __pycache__
 *.orig
 *.db-journal
 docker-cron example/
+*.*save
