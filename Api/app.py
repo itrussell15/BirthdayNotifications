@@ -5,13 +5,16 @@ from flask_sqlalchemy import SQLAlchemy
 import datetime, requests, json, os
 import logging
 
+# BASE_URL = "https://127.0.0.1:5000"
 
-app = Flask(__name__)
-api = Api(app)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
-db = SQLAlchemy(app)
-BASE_URL = "https://127.0.0.1:5000"
 
+def dbSetup(app, folder = "db", file = "database"):
+    db_dir = os.getcwd() + f"\\{folder}"
+    nothing = os.mkdir(db_dir) if not os.path.isdir(db_dir) else None
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{folder}//{file}.db"
+    db = SQLAlchemy(app)
+    logging.info(f"Database file added to {db_dir}\\{file}")
+    return db
 
 def loggingSetup(path):
     log_format = '%(asctime)s %(message)s'
@@ -20,7 +23,11 @@ def loggingSetup(path):
                         filemode = "w",
                         level = logging.INFO)
 
+app = Flask(__name__)
+api = Api(app)
+
 loggingSetup("master.log")
+db = dbSetup(app)
 
 class BirthdayModel(db.Model):
     fname = db.Column(db.String(30), primary_key = True)
