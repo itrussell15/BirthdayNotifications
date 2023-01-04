@@ -11,6 +11,7 @@ import shutil
 import logging
 import csv
 
+
 class FileManager:
 
     def __init__(self):
@@ -25,12 +26,12 @@ class FileManager:
 
     def loadCsv(self):
         with open(self.sysInfo.csvLocation) as file:
-            csvFile = csv.reader(file, delimiter = ",")
+            csvFile = csv.reader(file, delimiter=",")
             return [i for i in csvFile][1:]
 
     class SystemInformation:
 
-        def __init__(self, devMode = False):
+        def __init__(self, devMode=False):
             self.docker = True if os.environ.get("INSIDE_DOCKER") else False
             self.os = platform.system()
             self._basePath = self.determineBasePath(devMode)
@@ -49,13 +50,11 @@ class FileManager:
         def determineBasePath(self, devMode):
             if not self.docker:
                 if self.os == "Windows":
-                    return "S:\Files\ActiveApps\db\EventNotifications"
+                    return "Z:\Birthdays"
                 elif self.os == "Linux":
-                    # return "/mnt/Storage/Files/ActiveApps/birthdays"
-                    # return os.getcwd()
-                    return "/home/itrussell15/birthdays/BirthdayNotifications"
+                    return "/mnt/docker_data/Birthdays/"
                 else:
-                    return "/Users/isaactrussell/Documents/Coding/Birthdays"
+                    return "/mnt/"
             else:
                 # If it is running in docker
                 return "/home/schmuck"
@@ -85,10 +84,10 @@ class Logging:
     @staticmethod
     def _loggingSetup(path):
         log_format = '%(asctime)s %(message)s'
-        logging.basicConfig(filename = path,
-                            format = log_format,
-                            filemode = "a",
-                            level = logging.INFO)
+        logging.basicConfig(filename=path,
+                            format=log_format,
+                            filemode="a",
+                            level=logging.INFO)
         return logging.getLogger("BirthdayLogger")
 
     def filterNotification(self, person, diff):
@@ -101,7 +100,8 @@ class Logging:
             self.info("It is {} {} birthday today!".format(
                 person.fname,
                 person.lname))
-            
+
+
 if __name__ == "__main__":
     files = FileManager()
     print(files.sysInfo.csvLocation)

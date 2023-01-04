@@ -16,7 +16,7 @@ notify = Notifications(files.sysInfo.notificationSecretLocation)
 db = BirthdayDB(files.sysInfo.databaseLocation)
 
 #### REMOVE WHEN CONFIDENT THE PROGRAM RUNS WHEN SUPPOSED TO
-# notify.sendNotification("System Ran", "Your program ran successfully!")
+notify.sendNotification("System Ran", "Your program ran successfully!")
 
 print("Script running @ {}".format(datetime.datetime.now()))
 try:
@@ -26,7 +26,15 @@ try:
         files.createDBBackup()
         db.DeleteRows()
         for item in files.loadCsv():
-            db.AddPerson(item[0], item[1], item[2], item[6], item[7], item[8], item[3], item[4], item[5])
+            db.AddPerson(fname = item[0],
+                         lname = item[1],
+                         birthday = item[2],
+                         relationship=item[3],
+                         customMessage=item[4],
+                         day30Not=item[5],
+                         day7Not=item[6],
+                         birthdayNot=item[7]
+                         )
         log.info("Birthday file modifications detected. Database updated and backup created")
 
     date = datetime.date.today()
