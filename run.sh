@@ -1,1 +1,1 @@
-python3 /home/itrussell15/birthdays/BirthdayNotifications/Main.py >> /home/itrussell15/birthdays/BirthdayNotifications/run.log 2>&1
+sudo python3 /mnt/docker_data/Birthdays/Main.py >> /mnt/docker_data/Birthdays/run.log 2>&1
