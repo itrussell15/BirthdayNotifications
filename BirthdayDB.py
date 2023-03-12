@@ -65,6 +65,7 @@ class SqliteManager:
 
 class BirthdayDB(SqliteManager):
 
+    # This function will create a database line for a specific birthdays.
     def __init__(self, location, data = None):
         super().__init__(location)
         self.TABLE_NAME = "Birthdays"
