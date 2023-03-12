@@ -341,6 +341,7 @@ class Notifications:
             out = f.readlines()
         return out[0].strip(), out[1].strip()
 
+    # Class function that sends push notification via pushover to phone about a birthday happening
     def GenerateMessage(self, out, time):
         title = "Birthday Alert! 🎂🎉"
         body = "Your {} {} {} has a birthday ".format(out.relationship.lower(), out.fname, out.lname)
