@@ -7,6 +7,7 @@ services:
       - stack.env
     volumes:
       - ./data:/app/data
+    # Host port:container port mapping. Change the host port (left) if 8000 is in use.
     ports:
-      - "8000:8000"
+      - "8001:8001"
     restart: unless-stopped
