@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4">Birthday List</h2>
+<a href="/add" class="btn btn-primary mb-3">Add New Birthday</a>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Custom Message</th>
+                <th>7 Day Notice</th>
+                <th>30 Day Notice</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for birthday in birthdays %}
+            <tr>
+                <td>{{ birthday.name }}</td>
+                <td>{{ birthday.date }}</td>
+                <td>{{ birthday.custom_message or '-' }}</td>
+                <td>{{ '✓' if birthday.notify_7_days else '✗' }}</td>
+                <td>{{ '✓' if birthday.notify_30_days else '✗' }}</td>
+                <td>
+                    <form method="POST" action="/delete/{{ birthday.id }}" style="display: inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

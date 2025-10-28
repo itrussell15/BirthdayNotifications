@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h2 class="mb-4">Add New Birthday</h2>
+        <form method="POST">
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="date" class="form-label">Birth Date</label>
+                <input type="date" class="form-control" id="date" name="date" required>
+            </div>
+            <div class="mb-3">
+                <label for="relation" class="form-label">Relationship</label>
+                <input type="text" class="form-control" id="relation" name="relation" required>
+            </div>
+            <div class="mb-3">
+                <label for="custom_message" class="form-label">Custom Message (Optional)</label>
+                <textarea class="form-control" id="custom_message" name="custom_message" rows="3"></textarea>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="hidden" name="notify_7_days" value="false">
+                <input type="checkbox" class="form-check-input" id="notify_7_days" name="notify_7_days" value="true" checked>
+                <label class="form-check-label" for="notify_7_days">Notify 7 days before</label>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="hidden" name="notify_30_days" value="false">
+                <input type="checkbox" class="form-check-input" id="notify_30_days" name="notify_30_days" value="true" checked>
+                <label class="form-check-label" for="notify_30_days">Notify 30 days before</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Birthday</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
