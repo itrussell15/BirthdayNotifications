@@ -3,7 +3,8 @@ services:
   birthdays:
     build: .
     container_name: birthday_notifier
-    env_file: .env
+    env_file: 
+      - stack.env
     volumes:
       - ./data:/app/data
     ports:
