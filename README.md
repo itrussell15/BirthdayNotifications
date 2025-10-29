@@ -37,6 +37,14 @@ Setup Pushover
    - PUSHOVER_APP_TOKEN: Your application's API token
    - PUSHOVER_USER_KEY: Your user keyExample requests (replace host/port accordingly):
 
+# Web Interface
+
+## Add birthdays via a form
+![add_birthday](https://github.com/itrussell15/BirthdayNotifications/blob/master/images/add_birthday.png)
+
+## View current birthdays that have been entered
+![show_birthdays](https://github.com/itrussell15/BirthdayNotifications/blob/master/images/birthday_list.png)
+
 Create a birthday:
 
 ```bash
