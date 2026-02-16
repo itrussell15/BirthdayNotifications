@@ -5,7 +5,7 @@ Dockerized FastAPI service to store birthdays and send daily notifications (via 
 Features
 - REST API to create, read, update, delete birthdays
 - SQLite database (file) inside container
-- Daily scheduler that checks for today's birthdays and sends Telegram messages
+- Daily scheduler that checks for today's birthdays and sends Pushover messages
 
 Environment
 - See `.env.example` for required variables. You need a Pushover application token and user key.
