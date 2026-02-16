@@ -1,6 +1,6 @@
 # Birthday Notifier
 
-Dockerized FastAPI service to store birthdays and send daily notifications (via Telegram) when it's someone's birthday.
+Dockerized FastAPI service to store birthdays and send daily notifications (via Pushover) when it's someone's birthday.
 
 Features
 - REST API to create, read, update, delete birthdays
