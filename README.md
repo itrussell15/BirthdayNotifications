@@ -67,6 +67,5 @@ Next steps / improvements
 - Support other notification channels (email, SMS)
 - Add timezone-aware birthday checks or per-user preferences
 
-
 Notes
 - The scheduler runs once per day at 08:00 UTC by default. You can change schedule in `app/scheduler.py`.
